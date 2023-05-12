@@ -16,10 +16,7 @@ def write_file(name, content):
 
 def redirect(url):
     rsp = requests.get(url, allow_redirects=False, verify=False)
-    if 'Location' in rsp.headers:
-        return redirect(rsp.headers['Location'])
-    else:
-        return rsp
+    return redirect(rsp.headers['Location']) if 'Location' in rsp.headers else rsp
 
 
 def download_file(name, ext):
@@ -46,38 +43,32 @@ def init(ru, extend):
 
 def homeContent(ru, filter):
     result = ru.homeContent(filter)
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def homeVideoContent(ru):
     result = ru.homeVideoContent()
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def categoryContent(ru, tid, pg, filter, extend):
     result = ru.categoryContent(tid, pg, filter, str2json(extend))
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def detailContent(ru, array):
     result = ru.detailContent(str2json(array))
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def playerContent(ru, flag, id, vipFlags):
     result = ru.playerContent(flag, id, str2json(vipFlags))
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def searchContent(ru, key, quick):
     result = ru.searchContent(key, quick)
-    formatJo = json.dumps(result, ensure_ascii=False)
-    return formatJo
+    return json.dumps(result, ensure_ascii=False)
 
 
 def run():

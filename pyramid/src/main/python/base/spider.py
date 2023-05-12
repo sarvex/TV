@@ -10,11 +10,9 @@ class Spider(metaclass=ABCMeta):
     _instance = None
 
     def __new__(cls, *args, **kwargs):
-        if cls._instance:
-            return cls._instance
-        else:
+        if not cls._instance:
             cls._instance = super().__new__(cls)
-            return cls._instance
+        return cls._instance
 
     @abstractmethod
     def init(self, extend=""):
@@ -67,18 +65,18 @@ class Spider(metaclass=ABCMeta):
         self.extend = extend
 
     def regStr(self, src, reg, group=1):
-        m = re.search(reg, src)
-        src = ''
-        if m:
-            src = m.group(group)
+        src = m[group] if (m := re.search(reg, src)) else ''
         return src
 
     def str2json(self, str):
         return json.loads(str)
 
     def cleanText(self, src):
-        clean = re.sub('[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F1E0-\U0001F1FF]', '', src)
-        return clean
+        return re.sub(
+            '[\U0001F600-\U0001F64F\U0001F300-\U0001F5FF\U0001F680-\U0001F6FF\U0001F1E0-\U0001F1FF]',
+            '',
+            src,
+        )
 
     def fetch(self, url, headers={}, cookies=""):
         rsp = requests.get(url, headers=headers, cookies=cookies)
@@ -100,10 +98,7 @@ class Spider(metaclass=ABCMeta):
 
     def xpText(self, root, expr):
         ele = root.xpath(expr)
-        if len(ele) == 0:
-            return ''
-        else:
-            return ele[0]
+        return '' if len(ele) == 0 else ele[0]
 
     def loadModule(self, name, fileName):
         return SourceFileLoader(name, fileName).load_module()
